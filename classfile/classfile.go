@@ -39,7 +39,7 @@ var ConstantLengths = map[int]uint16{
 
 const magicNumber uint32 = 0xCAFEBABE
 
-var order = binary.BigEndian
+var Order = binary.BigEndian
 
 type Classfile struct {
 	MinorVersion uint16

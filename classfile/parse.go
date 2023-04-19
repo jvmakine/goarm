@@ -8,7 +8,7 @@ import (
 
 func Parse(from io.Reader) (*Classfile, error) {
 	var magic uint32
-	if err := binary.Read(from, order, &magic); err != nil {
+	if err := binary.Read(from, Order, &magic); err != nil {
 		return nil, err
 	}
 	if magic != magicNumber {
@@ -16,10 +16,10 @@ func Parse(from io.Reader) (*Classfile, error) {
 	}
 
 	var minor, major uint16
-	if err := binary.Read(from, order, &minor); err != nil {
+	if err := binary.Read(from, Order, &minor); err != nil {
 		return nil, err
 	}
-	if err := binary.Read(from, order, &major); err != nil {
+	if err := binary.Read(from, Order, &major); err != nil {
 		return nil, err
 	}
 
@@ -29,22 +29,22 @@ func Parse(from io.Reader) (*Classfile, error) {
 	}
 
 	var accessFlags, thisClass, superClass uint16
-	if err := binary.Read(from, order, &accessFlags); err != nil {
+	if err := binary.Read(from, Order, &accessFlags); err != nil {
 		return nil, err
 	}
-	if err := binary.Read(from, order, &thisClass); err != nil {
+	if err := binary.Read(from, Order, &thisClass); err != nil {
 		return nil, err
 	}
-	if err := binary.Read(from, order, &superClass); err != nil {
+	if err := binary.Read(from, Order, &superClass); err != nil {
 		return nil, err
 	}
 
 	var interfacesLength uint16
-	if err := binary.Read(from, order, &interfacesLength); err != nil {
+	if err := binary.Read(from, Order, &interfacesLength); err != nil {
 		return nil, err
 	}
 	interfaces := make([]uint16, interfacesLength)
-	if err := binary.Read(from, order, interfaces); err != nil {
+	if err := binary.Read(from, Order, interfaces); err != nil {
 		return nil, err
 	}
 
@@ -79,7 +79,7 @@ func Parse(from io.Reader) (*Classfile, error) {
 
 func parseConstantPool(from io.Reader) ([]*ConstantInfo, error) {
 	var length uint16
-	if err := binary.Read(from, order, &length); err != nil {
+	if err := binary.Read(from, Order, &length); err != nil {
 		return nil, err
 	}
 	result := make([]*ConstantInfo, length-1)
@@ -95,7 +95,7 @@ func parseConstantPool(from io.Reader) ([]*ConstantInfo, error) {
 
 func parseAttributes(from io.Reader) ([]*AttributeInfo, error) {
 	var length uint16
-	if err := binary.Read(from, order, &length); err != nil {
+	if err := binary.Read(from, Order, &length); err != nil {
 		return nil, err
 	}
 	result := make([]*AttributeInfo, length)
@@ -111,7 +111,7 @@ func parseAttributes(from io.Reader) ([]*AttributeInfo, error) {
 
 func parseMembers(from io.Reader) ([]*MemberInfo, error) {
 	var length uint16
-	if err := binary.Read(from, order, &length); err != nil {
+	if err := binary.Read(from, Order, &length); err != nil {
 		return nil, err
 	}
 	result := make([]*MemberInfo, length)
@@ -127,21 +127,21 @@ func parseMembers(from io.Reader) ([]*MemberInfo, error) {
 
 func parseConstantInfo(from io.Reader) (*ConstantInfo, error) {
 	var tag uint8
-	if err := binary.Read(from, order, &tag); err != nil {
+	if err := binary.Read(from, Order, &tag); err != nil {
 		return nil, err
 	}
 	switch tag {
 	case CONSTANT_Utf8:
 		var length uint16
-		if err := binary.Read(from, order, &length); err != nil {
+		if err := binary.Read(from, Order, &length); err != nil {
 			return nil, err
 		}
 		data := make([]byte, length)
-		if err := binary.Read(from, order, data); err != nil {
+		if err := binary.Read(from, Order, data); err != nil {
 			return nil, err
 		}
 		lengthBytes := make([]byte, 2)
-		order.PutUint16(lengthBytes, length)
+		Order.PutUint16(lengthBytes, length)
 		data = append(lengthBytes, data...)
 		return &ConstantInfo{Tag: tag, Info: data}, nil
 	case CONSTANT_Class:
@@ -171,7 +171,7 @@ func parseConstantInfo(from io.Reader) (*ConstantInfo, error) {
 	case CONSTANT_String:
 		length := ConstantLengths[int(tag)]
 		data := make([]byte, length)
-		if err := binary.Read(from, order, data); err != nil {
+		if err := binary.Read(from, Order, data); err != nil {
 			return nil, err
 		}
 		return &ConstantInfo{Tag: tag, Info: data}, nil
@@ -182,13 +182,13 @@ func parseConstantInfo(from io.Reader) (*ConstantInfo, error) {
 
 func parseMemberInfo(from io.Reader) (*MemberInfo, error) {
 	var accessFlags, nameIndex, descriptorIndex uint16
-	if err := binary.Read(from, order, &accessFlags); err != nil {
+	if err := binary.Read(from, Order, &accessFlags); err != nil {
 		return nil, err
 	}
-	if err := binary.Read(from, order, &nameIndex); err != nil {
+	if err := binary.Read(from, Order, &nameIndex); err != nil {
 		return nil, err
 	}
-	if err := binary.Read(from, order, &descriptorIndex); err != nil {
+	if err := binary.Read(from, Order, &descriptorIndex); err != nil {
 		return nil, err
 	}
 	attributess, err := parseAttributes(from)
@@ -205,15 +205,15 @@ func parseMemberInfo(from io.Reader) (*MemberInfo, error) {
 
 func parseAttributeInfo(from io.Reader) (*AttributeInfo, error) {
 	var attributeNameIndex uint16
-	if err := binary.Read(from, order, &attributeNameIndex); err != nil {
+	if err := binary.Read(from, Order, &attributeNameIndex); err != nil {
 		return nil, err
 	}
 	var attributeLength uint32
-	if err := binary.Read(from, order, &attributeLength); err != nil {
+	if err := binary.Read(from, Order, &attributeLength); err != nil {
 		return nil, err
 	}
 	data := make([]byte, attributeLength)
-	if err := binary.Read(from, order, data); err != nil {
+	if err := binary.Read(from, Order, data); err != nil {
 		return nil, err
 	}
 	return &AttributeInfo{

@@ -6,25 +6,25 @@ import (
 )
 
 func Write(class *Classfile, to io.Writer) error {
-	if err := binary.Write(to, order, magicNumber); err != nil {
+	if err := binary.Write(to, Order, magicNumber); err != nil {
 		return err
 	}
-	if err := binary.Write(to, order, class.MinorVersion); err != nil {
+	if err := binary.Write(to, Order, class.MinorVersion); err != nil {
 		return err
 	}
-	if err := binary.Write(to, order, class.MajorVersion); err != nil {
+	if err := binary.Write(to, Order, class.MajorVersion); err != nil {
 		return err
 	}
 	if err := writeConstantPool(to, class.ConstantPool); err != nil {
 		return err
 	}
-	if err := binary.Write(to, order, class.AccessFlags); err != nil {
+	if err := binary.Write(to, Order, class.AccessFlags); err != nil {
 		return err
 	}
-	if err := binary.Write(to, order, class.ThisClass); err != nil {
+	if err := binary.Write(to, Order, class.ThisClass); err != nil {
 		return err
 	}
-	if err := binary.Write(to, order, class.SuperClass); err != nil {
+	if err := binary.Write(to, Order, class.SuperClass); err != nil {
 		return err
 	}
 	if err := writeInterfaces(to, class.Interfaces); err != nil {
@@ -43,17 +43,17 @@ func Write(class *Classfile, to io.Writer) error {
 }
 
 func writeAttributes(to io.Writer, attributeInfo []*AttributeInfo) error {
-	if err := binary.Write(to, order, uint16(len(attributeInfo))); err != nil {
+	if err := binary.Write(to, Order, uint16(len(attributeInfo))); err != nil {
 		return err
 	}
 	for _, attribute := range attributeInfo {
-		if err := binary.Write(to, order, attribute.AttributeNameIndex); err != nil {
+		if err := binary.Write(to, Order, attribute.AttributeNameIndex); err != nil {
 			return err
 		}
-		if err := binary.Write(to, order, uint32(len(attribute.Info))); err != nil {
+		if err := binary.Write(to, Order, uint32(len(attribute.Info))); err != nil {
 			return err
 		}
-		if err := binary.Write(to, order, attribute.Info); err != nil {
+		if err := binary.Write(to, Order, attribute.Info); err != nil {
 			return err
 		}
 	}
@@ -61,17 +61,17 @@ func writeAttributes(to io.Writer, attributeInfo []*AttributeInfo) error {
 }
 
 func writeMemberInfos(to io.Writer, memberInfo []*MemberInfo) error {
-	if err := binary.Write(to, order, uint16(len(memberInfo))); err != nil {
+	if err := binary.Write(to, Order, uint16(len(memberInfo))); err != nil {
 		return err
 	}
 	for _, member := range memberInfo {
-		if err := binary.Write(to, order, member.AccessFlags); err != nil {
+		if err := binary.Write(to, Order, member.AccessFlags); err != nil {
 			return err
 		}
-		if err := binary.Write(to, order, member.NameIndex); err != nil {
+		if err := binary.Write(to, Order, member.NameIndex); err != nil {
 			return err
 		}
-		if err := binary.Write(to, order, member.DescriptionIndex); err != nil {
+		if err := binary.Write(to, Order, member.DescriptionIndex); err != nil {
 			return err
 		}
 		if err := writeAttributes(to, member.Attributes); err != nil {
@@ -82,11 +82,11 @@ func writeMemberInfos(to io.Writer, memberInfo []*MemberInfo) error {
 }
 
 func writeInterfaces(to io.Writer, interfaces []uint16) error {
-	if err := binary.Write(to, order, uint16(len(interfaces))); err != nil {
+	if err := binary.Write(to, Order, uint16(len(interfaces))); err != nil {
 		return err
 	}
 	for _, interf := range interfaces {
-		if err := binary.Write(to, order, interf); err != nil {
+		if err := binary.Write(to, Order, interf); err != nil {
 			return err
 		}
 	}
@@ -94,14 +94,14 @@ func writeInterfaces(to io.Writer, interfaces []uint16) error {
 }
 
 func writeConstantPool(to io.Writer, constantInfo []*ConstantInfo) error {
-	if err := binary.Write(to, order, uint16(len(constantInfo))+1); err != nil {
+	if err := binary.Write(to, Order, uint16(len(constantInfo))+1); err != nil {
 		return err
 	}
 	for _, info := range constantInfo {
-		if err := binary.Write(to, order, info.Tag); err != nil {
+		if err := binary.Write(to, Order, info.Tag); err != nil {
 			return err
 		}
-		if err := binary.Write(to, order, info.Info); err != nil {
+		if err := binary.Write(to, Order, info.Info); err != nil {
 			return err
 		}
 	}

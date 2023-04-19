@@ -1,6 +1,10 @@
 package class
 
-import "github.com/jvmakine/goarm/classfile"
+import (
+	"fmt"
+
+	"github.com/jvmakine/goarm/classfile"
+)
 
 type Class struct {
 	file *classfile.Classfile
@@ -26,4 +30,14 @@ func (c *Class) SetAccessFlags(flags map[AccessFlag]bool) {
 		result = result | uint16(flag)
 	}
 	c.file.AccessFlags = result
+}
+
+func (c *Class) Info() *ClassInfo {
+	index := c.file.ThisClass
+	classinfo := c.file.ConstantPool[index-1]
+	if classinfo.Tag != classfile.CONSTANT_Class {
+		panic(fmt.Errorf("incorrect class info constant type: %d", classinfo.Tag))
+	}
+	nameIndex := classfile.Order.Uint16(classinfo.Info)
+	return &ClassInfo{c.file, nameIndex}
 }
