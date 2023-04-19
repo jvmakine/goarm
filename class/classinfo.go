@@ -1,14 +1,21 @@
 package class
 
 import (
+	"fmt"
+
 	"github.com/jvmakine/goarm/classfile"
 )
 
 type ClassInfo struct {
-	file      *classfile.Classfile
-	nameIndex uint16
+	file  *classfile.Classfile
+	index uint16
 }
 
 func (ci *ClassInfo) Name() *String {
-	return &String{ci.file, ci.nameIndex}
+	classinfo := ci.file.ConstantPool[ci.index-1]
+	if classinfo.Tag != classfile.CONSTANT_Class {
+		panic(fmt.Errorf("incorrect class info constant type: %d", classinfo.Tag))
+	}
+	nameIndex := classfile.Order.Uint16(classinfo.Info)
+	return &String{ci.file, nameIndex}
 }

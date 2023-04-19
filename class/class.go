@@ -1,8 +1,6 @@
 package class
 
 import (
-	"fmt"
-
 	"github.com/jvmakine/goarm/classfile"
 )
 
@@ -32,12 +30,10 @@ func (c *Class) SetAccessFlags(flags map[AccessFlag]bool) {
 	c.file.AccessFlags = result
 }
 
-func (c *Class) Info() *ClassInfo {
-	index := c.file.ThisClass
-	classinfo := c.file.ConstantPool[index-1]
-	if classinfo.Tag != classfile.CONSTANT_Class {
-		panic(fmt.Errorf("incorrect class info constant type: %d", classinfo.Tag))
-	}
-	nameIndex := classfile.Order.Uint16(classinfo.Info)
-	return &ClassInfo{c.file, nameIndex}
+func (c *Class) ThisClass() *ClassInfo {
+	return &ClassInfo{c.file, c.file.ThisClass}
+}
+
+func (c *Class) SuperClass() *ClassInfo {
+	return &ClassInfo{c.file, c.file.SuperClass}
 }

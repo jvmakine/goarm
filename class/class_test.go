@@ -32,6 +32,14 @@ func TestClassInfo(t *testing.T) {
 		classFile, err := classfile.Parse(bytes.NewReader(data))
 		require.NoError(t, err)
 		clazz := class.NewClass(classFile)
-		require.Equal(t, "com/github/jvmakine/test/Hello", clazz.Info().Name().Text())
+		require.Equal(t, "com/github/jvmakine/test/Hello", clazz.ThisClass().Name().Text())
+	})
+	t.Run("returns name of the super class", func(t *testing.T) {
+		data, err := ioutil.ReadFile("../testdata/Hello.class")
+		require.NoError(t, err)
+		classFile, err := classfile.Parse(bytes.NewReader(data))
+		require.NoError(t, err)
+		clazz := class.NewClass(classFile)
+		require.Equal(t, "java/lang/Object", clazz.SuperClass().Name().Text())
 	})
 }
