@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/alecthomas/kong"
-	"github.com/jvmakine/goarm/pkg/class"
+	"github.com/jvmakine/goarm/classfile"
 )
 
 var CLI struct {
@@ -21,7 +21,7 @@ func (r *ParseCmd) Run() error {
 	if err != nil {
 		return err
 	}
-	classFile, err := class.Parse(file)
+	classFile, err := classfile.Parse(file)
 	if err != nil {
 		return err
 	}
