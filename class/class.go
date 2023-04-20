@@ -49,10 +49,18 @@ func (c *Class) Interfaces() []*ClassInfo {
 func (c *Class) SetInterfaces(to []*ClassInfo) {
 	indices := make([]uint16, len(to))
 	for i, ci := range to {
-		if ci.file != c.file {
-			panic("can not set ClassInfo from a different file")
-		}
+		validateFilesEqual(c.file, ci.file)
 		indices[i] = ci.index
 	}
 	c.file.Interfaces = indices
+}
+
+func validateFilesEqual(f1, f2 *classfile.Classfile) {
+	if f1 != f2 {
+		panic("can not combine values from different files")
+	}
+}
+
+func (c *Class) Constants() *Constants {
+	return &Constants{c.file}
 }
