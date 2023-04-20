@@ -12,16 +12,23 @@ import (
 
 func TestAtrributes(t *testing.T) {
 	t.Run("returns attributes for a public concrete class", func(t *testing.T) {
-		data, err := ioutil.ReadFile("../testdata/Hello.class")
-		require.NoError(t, err)
-		classFile, err := classfile.Parse(bytes.NewReader(data))
-		require.NoError(t, err)
-		clazz := class.NewClass(classFile)
-		require.Equal(t, map[class.AccessFlag]bool{
-			class.ACC_PUBLIC: true,
-			class.ACC_FINAL:  true,
-			class.ACC_SUPER:  true,
-		}, clazz.AccessFlags())
+		clazz := classFrom(t, "../testdata/Hello.class")
+		access := clazz.AccessFlags()
+
+		require.True(t, access.IsPublic())
+		require.True(t, access.IsFinal())
+		require.True(t, access.IsSuper())
+		require.False(t, access.IsAbstract())
+		require.False(t, access.IsAnnotation())
+		require.False(t, access.IsEnum())
+		require.False(t, access.IsInterface())
+		require.False(t, access.IsSynthetic())
+	})
+	t.Run("changes attributes", func(t *testing.T) {
+		clazz := classFrom(t, "../testdata/Hello.class")
+		clazz.AccessFlags().SetSynthetic(true)
+
+		require.True(t, clazz.AccessFlags().IsSynthetic())
 	})
 }
 
