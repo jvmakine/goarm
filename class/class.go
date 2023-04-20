@@ -1,7 +1,7 @@
 package class
 
 import (
-	"github.com/jvmakine/goarm/classfile"
+	"github.com/jvmakine/goasm/classfile"
 )
 
 type Class struct {

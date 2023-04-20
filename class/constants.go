@@ -1,6 +1,6 @@
 package class
 
-import "github.com/jvmakine/goarm/classfile"
+import "github.com/jvmakine/goasm/classfile"
 
 type Constants struct {
 	file *classfile.Classfile

@@ -5,8 +5,8 @@ import (
 	"io/ioutil"
 	"testing"
 
-	"github.com/jvmakine/goarm/class"
-	"github.com/jvmakine/goarm/classfile"
+	"github.com/jvmakine/goasm/class"
+	"github.com/jvmakine/goasm/classfile"
 	"github.com/stretchr/testify/require"
 )
 

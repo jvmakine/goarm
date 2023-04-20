@@ -3,7 +3,7 @@ package class
 import (
 	"fmt"
 
-	"github.com/jvmakine/goarm/classfile"
+	"github.com/jvmakine/goasm/classfile"
 )
 
 type String struct {

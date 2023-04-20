@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/alecthomas/kong"
-	"github.com/jvmakine/goarm/classfile"
+	"github.com/jvmakine/goasm/classfile"
 )
 
 var CLI struct {

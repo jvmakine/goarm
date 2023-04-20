@@ -1,4 +1,4 @@
-module github.com/jvmakine/goarm
+module github.com/jvmakine/goasm
 
 go 1.18
 
