@@ -28,3 +28,11 @@ func (f *Method) SetDescriptor(to *String) {
 	validateFilesEqual(f.file, to.file)
 	f.memberInfo.DescriptionIndex = to.index
 }
+
+func (f *Method) Attributes() []*Attribute {
+	result := make([]*Attribute, len(f.memberInfo.Attributes))
+	for i, a := range f.memberInfo.Attributes {
+		result[i] = &Attribute{f.file, a}
+	}
+	return result
+}

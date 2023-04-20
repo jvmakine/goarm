@@ -10,8 +10,8 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestAtrributes(t *testing.T) {
-	t.Run("returns attributes for a public concrete class", func(t *testing.T) {
+func TestAccessFlags(t *testing.T) {
+	t.Run("returns access flags for a public concrete class", func(t *testing.T) {
 		clazz := classFrom(t, "../testdata/Hello.class")
 		access := clazz.AccessFlags()
 
@@ -24,7 +24,7 @@ func TestAtrributes(t *testing.T) {
 		require.False(t, access.IsInterface())
 		require.False(t, access.IsSynthetic())
 	})
-	t.Run("changes attributes", func(t *testing.T) {
+	t.Run("changes access flags", func(t *testing.T) {
 		clazz := classFrom(t, "../testdata/Hello.class")
 		clazz.AccessFlags().SetSynthetic(true)
 
@@ -89,6 +89,21 @@ func TestMethods(t *testing.T) {
 			"()V",
 			"()Lcom/github/jvmakine/test/Empty;",
 			"(Ljava/lang/String;Lcom/github/jvmakine/test/Empty;)V",
+		}, names)
+	})
+}
+
+func TestAttributes(t *testing.T) {
+	t.Run("returns attribute names for a class", func(t *testing.T) {
+		clazz := classFrom(t, "../testdata/Hello.class")
+		var names []string
+		for _, f := range clazz.Attributes() {
+			names = append(names, f.Name().Text())
+		}
+		require.Equal(t, []string{
+			"SourceFile",
+			"SourceDebugExtension",
+			"RuntimeVisibleAnnotations",
 		}, names)
 	})
 }
