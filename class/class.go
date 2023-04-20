@@ -34,21 +34,8 @@ func (c *Class) SetSuperClass(to *ClassInfo) {
 	c.file.ThisClass = to.index
 }
 
-func (c *Class) Interfaces() []*ClassInfo {
-	result := make([]*ClassInfo, len(c.file.Interfaces))
-	for i, ci := range c.file.Interfaces {
-		result[i] = &ClassInfo{c.file, ci}
-	}
-	return result
-}
-
-func (c *Class) SetInterfaces(to []*ClassInfo) {
-	indices := make([]uint16, len(to))
-	for i, ci := range to {
-		validateFilesEqual(c.file, ci.file)
-		indices[i] = ci.index
-	}
-	c.file.Interfaces = indices
+func (c *Class) Interfaces() *Interfaces {
+	return &Interfaces{c.file}
 }
 
 func (c *Class) Constants() *Constants {
@@ -71,4 +58,22 @@ func validateFilesEqual(f1, f2 *classfile.Classfile) {
 	if f1 != f2 {
 		panic("can not combine values from different files")
 	}
+}
+
+type Interfaces struct {
+	file *classfile.Classfile
+}
+
+func (c *Interfaces) List() []*ClassInfo {
+	result := make([]*ClassInfo, len(c.file.Interfaces))
+	for i, ci := range c.file.Interfaces {
+		result[i] = &ClassInfo{c.file, ci}
+	}
+	return result
+}
+
+func (c *Interfaces) New(name *String) *ClassInfo {
+	validateFilesEqual(c.file, name.file)
+	c.file.Interfaces = append(c.file.Interfaces, name.index)
+	return &ClassInfo{c.file, name.index}
 }

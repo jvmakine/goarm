@@ -44,7 +44,7 @@ func TestClassInfo(t *testing.T) {
 	t.Run("returns interfaces correctly", func(t *testing.T) {
 		clazz := classFrom(t, "../testdata/Hello.class")
 		var names []string
-		for _, ci := range clazz.Interfaces() {
+		for _, ci := range clazz.Interfaces().List() {
 			names = append(names, ci.Name().Text())
 		}
 		require.Equal(t, []string{"java/io/Serializable"}, names)
