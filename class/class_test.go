@@ -51,6 +51,25 @@ func TestClassInfo(t *testing.T) {
 	})
 }
 
+func TestFields(t *testing.T) {
+	t.Run("returns field names of the class", func(t *testing.T) {
+		clazz := classFrom(t, "../testdata/Hello.class")
+		var names []string
+		for _, f := range clazz.Fields() {
+			names = append(names, f.Name().Text())
+		}
+		require.Equal(t, []string{"foo", "empty"}, names)
+	})
+	t.Run("returns field descriptors of the class", func(t *testing.T) {
+		clazz := classFrom(t, "../testdata/Hello.class")
+		var names []string
+		for _, f := range clazz.Fields() {
+			names = append(names, f.Descriptor().Text())
+		}
+		require.Equal(t, []string{"Ljava/lang/String;", "Lcom/github/jvmakine/test/Empty;"}, names)
+	})
+}
+
 func classFrom(t *testing.T, path string) *class.Class {
 	t.Helper()
 
