@@ -29,10 +29,28 @@ func (f *Method) SetDescriptor(to *String) {
 	f.memberInfo.DescriptionIndex = to.index
 }
 
-func (f *Method) Attributes() []*Attribute {
-	result := make([]*Attribute, len(f.memberInfo.Attributes))
-	for i, a := range f.memberInfo.Attributes {
-		result[i] = &Attribute{f.file, a}
+func (f *Method) Attributes() *Attributes {
+	return &Attributes{f.file, f.memberInfo.Attributes}
+}
+
+type Methods struct {
+	file *classfile.Classfile
+}
+
+func (c *Methods) List() []*Method {
+	result := make([]*Method, len(c.file.Methods))
+	for i, mi := range c.file.Methods {
+		result[i] = &Method{c.file, mi}
 	}
 	return result
+}
+
+func (c *Methods) New(name, descriptor *String) *Method {
+	validateFilesEqual(c.file, name.file)
+	validateFilesEqual(c.file, descriptor.file)
+	c.file.Fields = append(c.file.Methods, &classfile.MemberInfo{
+		NameIndex:        name.index,
+		DescriptionIndex: descriptor.index,
+	})
+	return &Method{c.file, c.file.Methods[len(c.file.Methods)-1]}
 }

@@ -29,10 +29,28 @@ func (f *Field) SetDescriptor(to *String) {
 	f.memberInfo.DescriptionIndex = to.index
 }
 
-func (c *Field) Attributes() []*Attribute {
-	result := make([]*Attribute, len(c.memberInfo.Attributes))
-	for i, a := range c.memberInfo.Attributes {
-		result[i] = &Attribute{c.file, a}
+func (c *Field) Attributes() *Attributes {
+	return &Attributes{c.file, c.memberInfo.Attributes}
+}
+
+type Fields struct {
+	file *classfile.Classfile
+}
+
+func (c *Fields) List() []*Field {
+	result := make([]*Field, len(c.file.Fields))
+	for i, mi := range c.file.Fields {
+		result[i] = &Field{c.file, mi}
 	}
 	return result
+}
+
+func (c *Fields) New(name, descriptor *String) *Field {
+	validateFilesEqual(c.file, name.file)
+	validateFilesEqual(c.file, descriptor.file)
+	c.file.Fields = append(c.file.Fields, &classfile.MemberInfo{
+		NameIndex:        name.index,
+		DescriptionIndex: descriptor.index,
+	})
+	return &Field{c.file, c.file.Fields[len(c.file.Fields)-1]}
 }

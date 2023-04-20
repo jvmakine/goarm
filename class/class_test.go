@@ -55,7 +55,7 @@ func TestFields(t *testing.T) {
 	t.Run("returns field names of the class", func(t *testing.T) {
 		clazz := classFrom(t, "../testdata/Hello.class")
 		var names []string
-		for _, f := range clazz.Fields() {
+		for _, f := range clazz.Fields().List() {
 			names = append(names, f.Name().Text())
 		}
 		require.Equal(t, []string{"foo", "empty"}, names)
@@ -63,7 +63,7 @@ func TestFields(t *testing.T) {
 	t.Run("returns field descriptors of the class", func(t *testing.T) {
 		clazz := classFrom(t, "../testdata/Hello.class")
 		var names []string
-		for _, f := range clazz.Fields() {
+		for _, f := range clazz.Fields().List() {
 			names = append(names, f.Descriptor().Text())
 		}
 		require.Equal(t, []string{"Ljava/lang/String;", "Lcom/github/jvmakine/test/Empty;"}, names)
@@ -74,7 +74,7 @@ func TestMethods(t *testing.T) {
 	t.Run("returns method names of the class", func(t *testing.T) {
 		clazz := classFrom(t, "../testdata/Hello.class")
 		var names []string
-		for _, f := range clazz.Methods() {
+		for _, f := range clazz.Methods().List() {
 			names = append(names, f.Name().Text())
 		}
 		require.Equal(t, []string{"hello", "getEmpty", "<init>"}, names)
@@ -82,7 +82,7 @@ func TestMethods(t *testing.T) {
 	t.Run("returns method descriptors of the class", func(t *testing.T) {
 		clazz := classFrom(t, "../testdata/Hello.class")
 		var names []string
-		for _, f := range clazz.Methods() {
+		for _, f := range clazz.Methods().List() {
 			names = append(names, f.Descriptor().Text())
 		}
 		require.Equal(t, []string{
@@ -97,7 +97,7 @@ func TestAttributes(t *testing.T) {
 	t.Run("returns attribute names for a class", func(t *testing.T) {
 		clazz := classFrom(t, "../testdata/Hello.class")
 		var names []string
-		for _, f := range clazz.Attributes() {
+		for _, f := range clazz.Attributes().List() {
 			names = append(names, f.Name().Text())
 		}
 		require.Equal(t, []string{

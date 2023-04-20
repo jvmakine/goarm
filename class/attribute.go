@@ -23,3 +23,25 @@ func (a *Attribute) Info() []byte {
 func (a *Attribute) SetInfo(to []byte) {
 	a.attribute.Info = to
 }
+
+type Attributes struct {
+	file  *classfile.Classfile
+	slice []*classfile.AttributeInfo
+}
+
+func (c *Attributes) List() []*Attribute {
+	result := make([]*Attribute, len(c.slice))
+	for i, a := range c.slice {
+		result[i] = &Attribute{c.file, a}
+	}
+	return result
+}
+
+func (c *Attributes) New(name *String, info []byte) *Attribute {
+	validateFilesEqual(c.file, name.file)
+	c.slice = append(c.slice, &classfile.AttributeInfo{
+		AttributeNameIndex: name.index,
+		Info:               info,
+	})
+	return &Attribute{c.file, c.slice[len(c.slice)-1]}
+}

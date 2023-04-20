@@ -55,46 +55,16 @@ func (c *Class) Constants() *Constants {
 	return &Constants{c.file}
 }
 
-func (c *Class) Fields() []*Field {
-	result := make([]*Field, len(c.file.Fields))
-	for i, mi := range c.file.Fields {
-		result[i] = &Field{c.file, mi}
-	}
-	return result
+func (c *Class) Fields() *Fields {
+	return &Fields{c.file}
 }
 
-func (c *Class) SetFields(to []*Field) {
-	result := make([]*classfile.MemberInfo, len(to))
-	for i, f := range to {
-		validateFilesEqual(c.file, f.file)
-		result[i] = f.memberInfo
-	}
-	c.file.Fields = result
+func (c *Class) Methods() *Methods {
+	return &Methods{c.file}
 }
 
-func (c *Class) Methods() []*Method {
-	result := make([]*Method, len(c.file.Methods))
-	for i, mi := range c.file.Methods {
-		result[i] = &Method{c.file, mi}
-	}
-	return result
-}
-
-func (c *Class) SetMethods(to []*Method) {
-	result := make([]*classfile.MemberInfo, len(to))
-	for i, f := range to {
-		validateFilesEqual(c.file, f.file)
-		result[i] = f.memberInfo
-	}
-	c.file.Methods = result
-}
-
-func (c *Class) Attributes() []*Attribute {
-	result := make([]*Attribute, len(c.file.Attributes))
-	for i, a := range c.file.Attributes {
-		result[i] = &Attribute{c.file, a}
-	}
-	return result
+func (c *Class) Attributes() *Attributes {
+	return &Attributes{c.file, c.file.Attributes}
 }
 
 func validateFilesEqual(f1, f2 *classfile.Classfile) {
