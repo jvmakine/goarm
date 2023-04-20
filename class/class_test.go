@@ -70,6 +70,29 @@ func TestFields(t *testing.T) {
 	})
 }
 
+func TestMethods(t *testing.T) {
+	t.Run("returns method names of the class", func(t *testing.T) {
+		clazz := classFrom(t, "../testdata/Hello.class")
+		var names []string
+		for _, f := range clazz.Methods() {
+			names = append(names, f.Name().Text())
+		}
+		require.Equal(t, []string{"hello", "getEmpty", "<init>"}, names)
+	})
+	t.Run("returns method descriptors of the class", func(t *testing.T) {
+		clazz := classFrom(t, "../testdata/Hello.class")
+		var names []string
+		for _, f := range clazz.Methods() {
+			names = append(names, f.Descriptor().Text())
+		}
+		require.Equal(t, []string{
+			"()V",
+			"()Lcom/github/jvmakine/test/Empty;",
+			"(Ljava/lang/String;Lcom/github/jvmakine/test/Empty;)V",
+		}, names)
+	})
+}
+
 func classFrom(t *testing.T, path string) *class.Class {
 	t.Helper()
 

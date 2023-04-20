@@ -16,6 +16,12 @@ const (
 	ACC_SYNTHETIC             = 0x1000
 	ACC_ANNOTATION            = 0x2000
 	ACC_ENUM                  = 0x4000
+	// method specific
+	ACC_SYNCHRONIZED = 0x00200
+	ACC_BRIDGE       = 0x0040
+	ACC_VARARGS      = 0x0080
+	ACC_NATIVE       = 0x0100
+	ACC_STRICT       = 0x0800
 )
 
 type ClassAccess struct {
@@ -160,4 +166,104 @@ func (a *FieldAccess) IsTransient() bool {
 
 func (a *FieldAccess) SetTransient(is bool) {
 	*a.field = *a.field | uint16(ACC_TRANSIENT)
+}
+
+type MethodAccess struct {
+	field *uint16
+}
+
+func (a *MethodAccess) IsPublic() bool {
+	return (*a.field)&uint16(ACC_PUBLIC) != 0
+}
+
+func (a *MethodAccess) SetPublic(is bool) {
+	*a.field = *a.field | uint16(ACC_PUBLIC)
+}
+
+func (a *MethodAccess) IsFinal() bool {
+	return (*a.field)&uint16(ACC_FINAL) != 0
+}
+
+func (a *MethodAccess) SetFinal(is bool) {
+	*a.field = *a.field | uint16(ACC_FINAL)
+}
+
+func (a *MethodAccess) IsSynthetic() bool {
+	return (*a.field)&uint16(ACC_SYNTHETIC) != 0
+}
+
+func (a *MethodAccess) SetSynthetic(is bool) {
+	*a.field = *a.field | uint16(ACC_SYNTHETIC)
+}
+
+func (a *MethodAccess) IsProtected() bool {
+	return (*a.field)&uint16(ACC_PROTECTED) != 0
+}
+
+func (a *MethodAccess) SetProtected(is bool) {
+	*a.field = *a.field | uint16(ACC_PROTECTED)
+}
+
+func (a *MethodAccess) IsPrivate() bool {
+	return (*a.field)&uint16(ACC_PRIVATE) != 0
+}
+
+func (a *MethodAccess) SetPrivate(is bool) {
+	*a.field = *a.field | uint16(ACC_PRIVATE)
+}
+
+func (a *MethodAccess) IsStatic() bool {
+	return (*a.field)&uint16(ACC_STATIC) != 0
+}
+
+func (a *MethodAccess) SetStatic(is bool) {
+	*a.field = *a.field | uint16(ACC_STATIC)
+}
+
+func (a *MethodAccess) IsSynchronized() bool {
+	return (*a.field)&uint16(ACC_SYNCHRONIZED) != 0
+}
+
+func (a *MethodAccess) SetSynchronized(is bool) {
+	*a.field = *a.field | uint16(ACC_SYNCHRONIZED)
+}
+
+func (a *MethodAccess) IsBridge() bool {
+	return (*a.field)&uint16(ACC_BRIDGE) != 0
+}
+
+func (a *MethodAccess) SetBridge(is bool) {
+	*a.field = *a.field | uint16(ACC_BRIDGE)
+}
+
+func (a *MethodAccess) IsVarArgs() bool {
+	return (*a.field)&uint16(ACC_VARARGS) != 0
+}
+
+func (a *MethodAccess) SetVarArgs(is bool) {
+	*a.field = *a.field | uint16(ACC_VARARGS)
+}
+
+func (a *MethodAccess) IsNative() bool {
+	return (*a.field)&uint16(ACC_NATIVE) != 0
+}
+
+func (a *MethodAccess) SetNative(is bool) {
+	*a.field = *a.field | uint16(ACC_NATIVE)
+}
+
+func (a *MethodAccess) IsAbstract() bool {
+	return (*a.field)&uint16(ACC_ABSTRACT) != 0
+}
+
+func (a *MethodAccess) SetAbstract(is bool) {
+	*a.field = *a.field | uint16(ACC_ABSTRACT)
+}
+
+func (a *MethodAccess) IsStrict() bool {
+	return (*a.field)&uint16(ACC_STRICT) != 0
+}
+
+func (a *MethodAccess) SetStrict(is bool) {
+	*a.field = *a.field | uint16(ACC_STRICT)
 }

@@ -72,6 +72,23 @@ func (c *Class) SetFields(to []*Field) {
 	c.file.Fields = result
 }
 
+func (c *Class) Methods() []*Method {
+	result := make([]*Method, len(c.file.Methods))
+	for i, mi := range c.file.Methods {
+		result[i] = &Method{c.file, mi}
+	}
+	return result
+}
+
+func (c *Class) SetMethods(to []*Method) {
+	result := make([]*classfile.MemberInfo, len(to))
+	for i, f := range to {
+		validateFilesEqual(c.file, f.file)
+		result[i] = f.memberInfo
+	}
+	c.file.Methods = result
+}
+
 func validateFilesEqual(f1, f2 *classfile.Classfile) {
 	if f1 != f2 {
 		panic("can not combine values from different files")
