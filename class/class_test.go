@@ -27,19 +27,29 @@ func TestAtrributes(t *testing.T) {
 
 func TestClassInfo(t *testing.T) {
 	t.Run("returns name of the class", func(t *testing.T) {
-		data, err := ioutil.ReadFile("../testdata/Hello.class")
-		require.NoError(t, err)
-		classFile, err := classfile.Parse(bytes.NewReader(data))
-		require.NoError(t, err)
-		clazz := class.NewClass(classFile)
+		clazz := classFrom(t, "../testdata/Hello.class")
 		require.Equal(t, "com/github/jvmakine/test/Hello", clazz.ThisClass().Name().Text())
 	})
 	t.Run("returns name of the super class", func(t *testing.T) {
-		data, err := ioutil.ReadFile("../testdata/Hello.class")
-		require.NoError(t, err)
-		classFile, err := classfile.Parse(bytes.NewReader(data))
-		require.NoError(t, err)
-		clazz := class.NewClass(classFile)
+		clazz := classFrom(t, "../testdata/Hello.class")
 		require.Equal(t, "java/lang/Object", clazz.SuperClass().Name().Text())
 	})
+	t.Run("returns interfaces correctly", func(t *testing.T) {
+		clazz := classFrom(t, "../testdata/Hello.class")
+		var names []string
+		for _, ci := range clazz.Interfaces() {
+			names = append(names, ci.Name().Text())
+		}
+		require.Equal(t, []string{"java/io/Serializable"}, names)
+	})
+}
+
+func classFrom(t *testing.T, path string) *class.Class {
+	t.Helper()
+
+	data, err := ioutil.ReadFile(path)
+	require.NoError(t, err)
+	classFile, err := classfile.Parse(bytes.NewReader(data))
+	require.NoError(t, err)
+	return class.NewClass(classFile)
 }
