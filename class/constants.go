@@ -34,7 +34,7 @@ func (c *Constants) NewString(text string) *String {
 func (c *Constants) ClassInfos() []*ClassInfo {
 	var result []*ClassInfo
 	for i, ci := range c.file.ConstantPool {
-		if ci.Tag == classfile.CONSTANT_Class {
+		if ci.Tag == uint8(classfile.CONSTANT_Class) {
 			result = append(result, &ClassInfo{c.file, uint16(i + 1)})
 		}
 	}
@@ -47,7 +47,7 @@ func (c *Constants) NewClassInfo(name *String) *ClassInfo {
 	nameIndex := make([]byte, 2)
 	classfile.Order.PutUint16(nameIndex, name.index)
 	c.file.ConstantPool = append(c.file.ConstantPool, &classfile.ConstantInfo{
-		Tag:  classfile.CONSTANT_Class,
+		Tag:  uint8(classfile.CONSTANT_Class),
 		Info: nameIndex,
 	})
 	return &ClassInfo{c.file, uint16(len(c.file.ConstantPool))}
@@ -60,7 +60,7 @@ type ClassInfo struct {
 
 func (ci *ClassInfo) Name() *String {
 	classinfo := ci.file.ConstantPool[ci.index-1]
-	if classinfo.Tag != classfile.CONSTANT_Class {
+	if classinfo.Tag != uint8(classfile.CONSTANT_Class) {
 		panic(fmt.Errorf("incorrect class info constant type: %d", classinfo.Tag))
 	}
 	nameIndex := classfile.Order.Uint16(classinfo.Info)

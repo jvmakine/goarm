@@ -33,7 +33,7 @@ type FieldSummary struct {
 }
 
 type ConstantSummary struct {
-	Tag   int    `yaml:"tag"`
+	Type  string `yaml:"type"`
 	Value string `yaml:"value"`
 }
 
@@ -53,7 +53,7 @@ func constantSummary(constants []*classfile.ConstantInfo) []*ConstantSummary {
 	result := make([]*ConstantSummary, len(constants))
 	for i, c := range constants {
 		result[i] = &ConstantSummary{
-			Tag:   int(c.Tag),
+			Type:  classfile.ConstantTag(c.Tag).String(),
 			Value: string(c.Info),
 		}
 	}

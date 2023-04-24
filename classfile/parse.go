@@ -130,7 +130,7 @@ func parseConstantInfo(from io.Reader) (*ConstantInfo, error) {
 	if err := binary.Read(from, Order, &tag); err != nil {
 		return nil, err
 	}
-	switch tag {
+	switch ConstantTag(tag) {
 	case CONSTANT_Utf8:
 		var length uint16
 		if err := binary.Read(from, Order, &length); err != nil {
@@ -169,7 +169,7 @@ func parseConstantInfo(from io.Reader) (*ConstantInfo, error) {
 	case CONSTANT_NameAndType:
 		fallthrough
 	case CONSTANT_String:
-		length := ConstantLengths[int(tag)]
+		length := ConstantLengths[ConstantTag(tag)]
 		data := make([]byte, length)
 		if err := binary.Read(from, Order, data); err != nil {
 			return nil, err

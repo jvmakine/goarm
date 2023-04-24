@@ -2,26 +2,29 @@ package classfile
 
 import (
 	"encoding/binary"
+	"fmt"
 )
+
+type ConstantTag uint8
 
 const (
-	CONSTANT_Class              = 7
-	CONSTANT_Fieldref           = 9
-	CONSTANT_Methodref          = 10
-	CONSTANT_InterfaceMethodref = 11
-	CONSTANT_String             = 8
-	CONSTANT_Integer            = 3
-	CONSTANT_Float              = 4
-	CONSTANT_Long               = 5
-	CONSTANT_Double             = 6
-	CONSTANT_NameAndType        = 12
-	CONSTANT_Utf8               = 1
-	CONSTANT_MethodHandle       = 15
-	CONSTANT_MethodType         = 16
-	CONSTANT_InvokeDynamic      = 18
+	CONSTANT_Class              ConstantTag = 7
+	CONSTANT_Fieldref                       = 9
+	CONSTANT_Methodref                      = 10
+	CONSTANT_InterfaceMethodref             = 11
+	CONSTANT_String                         = 8
+	CONSTANT_Integer                        = 3
+	CONSTANT_Float                          = 4
+	CONSTANT_Long                           = 5
+	CONSTANT_Double                         = 6
+	CONSTANT_NameAndType                    = 12
+	CONSTANT_Utf8                           = 1
+	CONSTANT_MethodHandle                   = 15
+	CONSTANT_MethodType                     = 16
+	CONSTANT_InvokeDynamic                  = 18
 )
 
-var ConstantLengths = map[int]uint16{
+var ConstantLengths = map[ConstantTag]uint8{
 	CONSTANT_Class:              2,
 	CONSTANT_Fieldref:           4,
 	CONSTANT_Methodref:          4,
@@ -35,6 +38,31 @@ var ConstantLengths = map[int]uint16{
 	CONSTANT_MethodHandle:       3,
 	CONSTANT_MethodType:         2,
 	CONSTANT_InvokeDynamic:      4,
+}
+
+var constantNames = map[ConstantTag]string{
+	CONSTANT_Class:              "class",
+	CONSTANT_Fieldref:           "fieldref",
+	CONSTANT_Methodref:          "methodref",
+	CONSTANT_InterfaceMethodref: "interfacemethodref",
+	CONSTANT_String:             "string",
+	CONSTANT_Integer:            "integer",
+	CONSTANT_Float:              "float",
+	CONSTANT_Long:               "long",
+	CONSTANT_Double:             "double",
+	CONSTANT_NameAndType:        "nameandtype",
+	CONSTANT_Utf8:               "utf8",
+	CONSTANT_MethodHandle:       "methodhandle",
+	CONSTANT_MethodType:         "methodtype",
+	CONSTANT_InvokeDynamic:      "invokedynamic",
+}
+
+func (c ConstantTag) String() string {
+	r, ok := constantNames[c]
+	if ok {
+		return r
+	}
+	return fmt.Sprintf("undefined (%d)", c)
 }
 
 const magicNumber uint32 = 0xCAFEBABE
