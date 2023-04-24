@@ -17,7 +17,7 @@ func (a *Attribute) SetName(to *String) {
 }
 
 func (a *Attribute) Info() []byte {
-	return a.Info()
+	return a.attribute.Info
 }
 
 func (a *Attribute) SetInfo(to []byte) {

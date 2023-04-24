@@ -1,22 +1,23 @@
 package main
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/alecthomas/kong"
+	"github.com/jvmakine/goasm/class"
 	"github.com/jvmakine/goasm/classfile"
+	"gopkg.in/yaml.v3"
 )
 
 var CLI struct {
-	ParseCmd
+	CatCmd `cmd:""`
 }
 
-type ParseCmd struct {
-	ClassFile string `arg:"" help:"the .class file to parse"`
+type CatCmd struct {
+	ClassFile string `arg:"" help:"the .class file to show"`
 }
 
-func (r *ParseCmd) Run() error {
+func (r *CatCmd) Run() error {
 	file, err := os.Open(r.ClassFile)
 	if err != nil {
 		return err
@@ -25,7 +26,13 @@ func (r *ParseCmd) Run() error {
 	if err != nil {
 		return err
 	}
-	fmt.Printf("version: %d.%d\n", classFile.MajorVersion, classFile.MinorVersion)
+	clazz := class.NewClass(classFile)
+	summary := SummaryFrom(clazz, classFile)
+	bytes, err := yaml.Marshal(summary)
+	if err != nil {
+		return err
+	}
+	println(string(bytes))
 	return nil
 }
 
