@@ -37,7 +37,7 @@ func (cmd *DependifyCmd) Run() error {
 	for _, info := range references {
 		name := info.Name().Text()
 		if name != clazz.ThisClass().Name().Text() {
-			if strings.HasPrefix(name, "java/lang") {
+			if strings.HasPrefix(name, "java/") {
 				continue
 			}
 			hash, err := getHash(name, cmd.Classpath)
