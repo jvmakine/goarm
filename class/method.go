@@ -3,7 +3,7 @@ package class
 import "github.com/jvmakine/goasm/classfile"
 
 type Method struct {
-	file       *classfile.Classfile
+	clazz      *Class
 	memberInfo *classfile.MemberInfo
 }
 
@@ -12,45 +12,45 @@ func (f *Method) AccessFlags() *MethodAccess {
 }
 
 func (f *Method) Name() *String {
-	return &String{f.file, f.memberInfo.NameIndex}
+	return &String{f.clazz.file, f.memberInfo.NameIndex}
 }
 
 func (f *Method) SetName(to *String) {
-	validateFilesEqual(f.file, to.file)
+	validateFilesEqual(f.clazz.file, to.file)
 	f.memberInfo.NameIndex = to.index
 }
 
 func (f *Method) Descriptor() *String {
-	return &String{f.file, f.memberInfo.DescriptionIndex}
+	return &String{f.clazz.file, f.memberInfo.DescriptionIndex}
 }
 
 func (f *Method) SetDescriptor(to *String) {
-	validateFilesEqual(f.file, to.file)
+	validateFilesEqual(f.clazz.file, to.file)
 	f.memberInfo.DescriptionIndex = to.index
 }
 
 func (f *Method) Attributes() *Attributes {
-	return &Attributes{f.file, &f.memberInfo.Attributes}
+	return &Attributes{f.clazz, &f.memberInfo.Attributes}
 }
 
 type Methods struct {
-	file *classfile.Classfile
+	clazz *Class
 }
 
 func (c *Methods) List() []*Method {
-	result := make([]*Method, len(c.file.Methods))
-	for i, mi := range c.file.Methods {
-		result[i] = &Method{c.file, mi}
+	result := make([]*Method, len(c.clazz.file.Methods))
+	for i, mi := range c.clazz.file.Methods {
+		result[i] = &Method{c.clazz, mi}
 	}
 	return result
 }
 
 func (c *Methods) New(name, descriptor *String) *Method {
-	validateFilesEqual(c.file, name.file)
-	validateFilesEqual(c.file, descriptor.file)
-	c.file.Fields = append(c.file.Methods, &classfile.MemberInfo{
+	validateFilesEqual(c.clazz.file, name.file)
+	validateFilesEqual(c.clazz.file, descriptor.file)
+	c.clazz.file.Fields = append(c.clazz.file.Methods, &classfile.MemberInfo{
 		NameIndex:        name.index,
 		DescriptionIndex: descriptor.index,
 	})
-	return &Method{c.file, c.file.Methods[len(c.file.Methods)-1]}
+	return &Method{c.clazz, c.clazz.file.Methods[len(c.clazz.file.Methods)-1]}
 }

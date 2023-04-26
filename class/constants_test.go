@@ -13,11 +13,11 @@ func TestConstants(t *testing.T) {
 		for _, s := range clazz.Constants().Strings() {
 			result = append(result, s.Text())
 		}
-		require.Len(t, result, 45)
+		require.Len(t, result, 24)
 		require.Equal(t, []string{
-			"com/github/jvmakine/test/Hello",
 			"java/lang/Object",
-			"java/io/Serializable",
+			"<init>",
+			"()V",
 		}, result[:3])
 	})
 	t.Run("returns all class infos", func(t *testing.T) {
@@ -27,12 +27,11 @@ func TestConstants(t *testing.T) {
 			result = append(result, s.Name().Text())
 		}
 		require.Equal(t, []string{
-			"com/github/jvmakine/test/Hello",
 			"java/lang/Object",
-			"java/io/Serializable",
+			"com/github/jvmakine/test/Hello",
 			"java/lang/System",
 			"java/io/PrintStream",
-			"kotlin/jvm/internal/Intrinsics",
+			"java/io/Serializable",
 		}, result)
 	})
 }

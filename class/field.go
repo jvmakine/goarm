@@ -3,7 +3,7 @@ package class
 import "github.com/jvmakine/goasm/classfile"
 
 type Field struct {
-	file       *classfile.Classfile
+	clazz      *Class
 	memberInfo *classfile.MemberInfo
 }
 
@@ -12,45 +12,45 @@ func (f *Field) AccessFlags() *FieldAccess {
 }
 
 func (f *Field) Name() *String {
-	return &String{f.file, f.memberInfo.NameIndex}
+	return &String{f.clazz.file, f.memberInfo.NameIndex}
 }
 
 func (f *Field) SetName(to *String) {
-	validateFilesEqual(f.file, to.file)
+	validateFilesEqual(f.clazz.file, to.file)
 	f.memberInfo.NameIndex = to.index
 }
 
 func (f *Field) Descriptor() *String {
-	return &String{f.file, f.memberInfo.DescriptionIndex}
+	return &String{f.clazz.file, f.memberInfo.DescriptionIndex}
 }
 
 func (f *Field) SetDescriptor(to *String) {
-	validateFilesEqual(f.file, to.file)
+	validateFilesEqual(f.clazz.file, to.file)
 	f.memberInfo.DescriptionIndex = to.index
 }
 
 func (c *Field) Attributes() *Attributes {
-	return &Attributes{c.file, &c.memberInfo.Attributes}
+	return &Attributes{c.clazz, &c.memberInfo.Attributes}
 }
 
 type Fields struct {
-	file *classfile.Classfile
+	clazz *Class
 }
 
 func (c *Fields) List() []*Field {
-	result := make([]*Field, len(c.file.Fields))
-	for i, mi := range c.file.Fields {
-		result[i] = &Field{c.file, mi}
+	result := make([]*Field, len(c.clazz.file.Fields))
+	for i, mi := range c.clazz.file.Fields {
+		result[i] = &Field{c.clazz, mi}
 	}
 	return result
 }
 
 func (c *Fields) New(name, descriptor *String) *Field {
-	validateFilesEqual(c.file, name.file)
-	validateFilesEqual(c.file, descriptor.file)
-	c.file.Fields = append(c.file.Fields, &classfile.MemberInfo{
+	validateFilesEqual(c.clazz.file, name.file)
+	validateFilesEqual(c.clazz.file, descriptor.file)
+	c.clazz.file.Fields = append(c.clazz.file.Fields, &classfile.MemberInfo{
 		NameIndex:        name.index,
 		DescriptionIndex: descriptor.index,
 	})
-	return &Field{c.file, c.file.Fields[len(c.file.Fields)-1]}
+	return &Field{c.clazz, c.clazz.file.Fields[len(c.clazz.file.Fields)-1]}
 }

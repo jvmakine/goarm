@@ -101,8 +101,6 @@ func TestAttributes(t *testing.T) {
 		}
 		require.Equal(t, []string{
 			"SourceFile",
-			"SourceDebugExtension",
-			"RuntimeVisibleAnnotations",
 		}, names)
 	})
 }

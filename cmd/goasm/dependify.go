@@ -56,7 +56,7 @@ func (cmd *DependifyCmd) Run() error {
 		builder.WriteString(hash)
 		builder.WriteString("\n")
 	}
-	clazz.Attributes().New(clazz.Constants().NewString("dep_hashes"), []byte(builder.String()))
+	clazz.Attributes().NewOrReplace("dep_hashes", []byte(builder.String()))
 
 	file, err = os.OpenFile(cmd.ClassFile, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
 	if err != nil {

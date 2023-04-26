@@ -43,15 +43,15 @@ func (c *Class) Constants() *Constants {
 }
 
 func (c *Class) Fields() *Fields {
-	return &Fields{c.file}
+	return &Fields{c}
 }
 
 func (c *Class) Methods() *Methods {
-	return &Methods{c.file}
+	return &Methods{c}
 }
 
 func (c *Class) Attributes() *Attributes {
-	return &Attributes{c.file, &c.file.Attributes}
+	return &Attributes{c, &c.file.Attributes}
 }
 
 func validateFilesEqual(f1, f2 *classfile.Classfile) {

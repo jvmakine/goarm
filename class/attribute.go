@@ -25,24 +25,35 @@ func (a *Attribute) SetInfo(to []byte) {
 }
 
 type Attributes struct {
-	file  *classfile.Classfile
+	clazz *Class
 	slice *[]*classfile.AttributeInfo
 }
 
 func (c *Attributes) List() []*Attribute {
 	result := make([]*Attribute, len(*c.slice))
 	for i, a := range *c.slice {
-		result[i] = &Attribute{c.file, a}
+		result[i] = &Attribute{c.clazz.file, a}
 	}
 	return result
 }
 
 func (c *Attributes) New(name *String, info []byte) *Attribute {
-	validateFilesEqual(c.file, name.file)
+	validateFilesEqual(c.clazz.file, name.file)
 	newSlice := append(*c.slice, &classfile.AttributeInfo{
 		AttributeNameIndex: name.index,
 		Info:               info,
 	})
 	*c.slice = newSlice
-	return &Attribute{c.file, (*c.slice)[len(*c.slice)-1]}
+	return &Attribute{c.clazz.file, (*c.slice)[len(*c.slice)-1]}
+}
+
+func (c *Attributes) NewOrReplace(name string, info []byte) *Attribute {
+	for i, a := range c.List() {
+		if a.Name().Text() == name {
+			a.SetInfo(info)
+			return &Attribute{c.clazz.file, (*c.slice)[i]}
+		}
+	}
+	str := c.clazz.Constants().NewString(name)
+	return c.New(str, info)
 }
