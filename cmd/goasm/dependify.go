@@ -1,7 +1,13 @@
 package main
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
+	"io"
+	"log"
 	"os"
+	"path/filepath"
+	"strings"
 
 	"github.com/jvmakine/goasm/class"
 	"github.com/jvmakine/goasm/classfile"
@@ -14,8 +20,8 @@ type DependifyCmd struct {
 
 type ClassHashes map[string]string
 
-func (r *DependifyCmd) Run() error {
-	file, err := os.Open(r.ClassFile)
+func (cmd *DependifyCmd) Run() error {
+	file, err := os.Open(cmd.ClassFile)
 	if err != nil {
 		return err
 	}
@@ -26,22 +32,36 @@ func (r *DependifyCmd) Run() error {
 	clazz := class.NewClass(classFile)
 
 	references := clazz.Constants().ClassInfos()
-	//hashes := ClassHashes{}
+	hashes := ClassHashes{}
 	for _, info := range references {
 		name := info.Name().Text()
 		if name != clazz.ThisClass().Name().Text() {
-			println(name)
-			// hash, err := getHash(name)
-			// if err != nil {
-			// 	return err
-			// }
-			// hashes[name] = hash
+			if strings.HasPrefix(name, "java/lang") {
+				continue
+			}
+			hash, err := getHash(name, cmd.Classpath)
+			if err != nil {
+				return err
+			}
+			hashes[name] = hash
+			println(name + " : " + hash)
 		}
 	}
 
 	return nil
 }
 
-func getHash(name string) (string, error) {
-	panic("unimplemented")
+func getHash(name string, dir string) (string, error) {
+	f, err := os.Open(filepath.Join(dir, name) + ".class")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer f.Close()
+
+	h := sha256.New()
+	if _, err := io.Copy(h, f); err != nil {
+		log.Fatal(err)
+	}
+
+	return string(hex.EncodeToString(h.Sum(nil))), nil
 }
