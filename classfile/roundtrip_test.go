@@ -11,7 +11,7 @@ import (
 
 func TestRoundTrip(t *testing.T) {
 	t.Run("round trips empty class correctly", func(t *testing.T) {
-		data, err := ioutil.ReadFile("../testdata/Empty.class")
+		data, err := ioutil.ReadFile("../testdata/com/github/jvmakine/test/Empty.class")
 		require.NoError(t, err)
 
 		classFile, err := classfile.Parse(bytes.NewReader(data))
@@ -24,7 +24,7 @@ func TestRoundTrip(t *testing.T) {
 		require.Equal(t, data, buf.Bytes())
 	})
 	t.Run("round trips hello class correctly", func(t *testing.T) {
-		data, err := ioutil.ReadFile("../testdata/Hello.class")
+		data, err := ioutil.ReadFile("../testdata/com/github/jvmakine/test/Hello.class")
 		require.NoError(t, err)
 
 		classFile, err := classfile.Parse(bytes.NewReader(data))

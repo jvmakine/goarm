@@ -12,11 +12,11 @@ import (
 
 func TestAccessFlags(t *testing.T) {
 	t.Run("returns access flags for a public concrete class", func(t *testing.T) {
-		clazz := classFrom(t, "../testdata/Hello.class")
+		clazz := classFrom(t, "../testdata/com/github/jvmakine/test/Hello.class")
 		access := clazz.AccessFlags()
 
 		require.True(t, access.IsPublic())
-		require.True(t, access.IsFinal())
+		require.False(t, access.IsFinal())
 		require.True(t, access.IsSuper())
 		require.False(t, access.IsAbstract())
 		require.False(t, access.IsAnnotation())
@@ -25,7 +25,7 @@ func TestAccessFlags(t *testing.T) {
 		require.False(t, access.IsSynthetic())
 	})
 	t.Run("changes access flags", func(t *testing.T) {
-		clazz := classFrom(t, "../testdata/Hello.class")
+		clazz := classFrom(t, "../testdata/com/github/jvmakine/test/Hello.class")
 		clazz.AccessFlags().SetSynthetic(true)
 
 		require.True(t, clazz.AccessFlags().IsSynthetic())
@@ -34,15 +34,15 @@ func TestAccessFlags(t *testing.T) {
 
 func TestClassInfo(t *testing.T) {
 	t.Run("returns name of the class", func(t *testing.T) {
-		clazz := classFrom(t, "../testdata/Hello.class")
+		clazz := classFrom(t, "../testdata/com/github/jvmakine/test/Hello.class")
 		require.Equal(t, "com/github/jvmakine/test/Hello", clazz.ThisClass().Name().Text())
 	})
 	t.Run("returns name of the super class", func(t *testing.T) {
-		clazz := classFrom(t, "../testdata/Hello.class")
+		clazz := classFrom(t, "../testdata/com/github/jvmakine/test/Hello.class")
 		require.Equal(t, "java/lang/Object", clazz.SuperClass().Name().Text())
 	})
 	t.Run("returns interfaces correctly", func(t *testing.T) {
-		clazz := classFrom(t, "../testdata/Hello.class")
+		clazz := classFrom(t, "../testdata/com/github/jvmakine/test/Hello.class")
 		var names []string
 		for _, ci := range clazz.Interfaces().List() {
 			names = append(names, ci.Name().Text())
@@ -53,7 +53,7 @@ func TestClassInfo(t *testing.T) {
 
 func TestFields(t *testing.T) {
 	t.Run("returns field names of the class", func(t *testing.T) {
-		clazz := classFrom(t, "../testdata/Hello.class")
+		clazz := classFrom(t, "../testdata/com/github/jvmakine/test/Hello.class")
 		var names []string
 		for _, f := range clazz.Fields().List() {
 			names = append(names, f.Name().Text())
@@ -61,7 +61,7 @@ func TestFields(t *testing.T) {
 		require.Equal(t, []string{"foo", "empty"}, names)
 	})
 	t.Run("returns field descriptors of the class", func(t *testing.T) {
-		clazz := classFrom(t, "../testdata/Hello.class")
+		clazz := classFrom(t, "../testdata/com/github/jvmakine/test/Hello.class")
 		var names []string
 		for _, f := range clazz.Fields().List() {
 			names = append(names, f.Descriptor().Text())
@@ -72,30 +72,29 @@ func TestFields(t *testing.T) {
 
 func TestMethods(t *testing.T) {
 	t.Run("returns method names of the class", func(t *testing.T) {
-		clazz := classFrom(t, "../testdata/Hello.class")
+		clazz := classFrom(t, "../testdata/com/github/jvmakine/test/Hello.class")
 		var names []string
 		for _, f := range clazz.Methods().List() {
 			names = append(names, f.Name().Text())
 		}
-		require.Equal(t, []string{"hello", "getEmpty", "<init>"}, names)
+		require.Equal(t, []string{"<init>", "hello"}, names)
 	})
 	t.Run("returns method descriptors of the class", func(t *testing.T) {
-		clazz := classFrom(t, "../testdata/Hello.class")
+		clazz := classFrom(t, "../testdata/com/github/jvmakine/test/Hello.class")
 		var names []string
 		for _, f := range clazz.Methods().List() {
 			names = append(names, f.Descriptor().Text())
 		}
 		require.Equal(t, []string{
-			"()V",
-			"()Lcom/github/jvmakine/test/Empty;",
 			"(Ljava/lang/String;Lcom/github/jvmakine/test/Empty;)V",
+			"()V",
 		}, names)
 	})
 }
 
 func TestAttributes(t *testing.T) {
 	t.Run("returns attribute names for a class", func(t *testing.T) {
-		clazz := classFrom(t, "../testdata/Hello.class")
+		clazz := classFrom(t, "../testdata/com/github/jvmakine/test/Hello.class")
 		var names []string
 		for _, f := range clazz.Attributes().List() {
 			names = append(names, f.Name().Text())

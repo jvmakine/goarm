@@ -8,7 +8,7 @@ import (
 
 func TestConstants(t *testing.T) {
 	t.Run("returns all strings from a class", func(t *testing.T) {
-		clazz := classFrom(t, "../testdata/Hello.class")
+		clazz := classFrom(t, "../testdata/com/github/jvmakine/test/Hello.class")
 		var result []string
 		for _, s := range clazz.Constants().Strings() {
 			result = append(result, s.Text())
@@ -21,7 +21,7 @@ func TestConstants(t *testing.T) {
 		}, result[:3])
 	})
 	t.Run("returns all class infos", func(t *testing.T) {
-		clazz := classFrom(t, "../testdata/Hello.class")
+		clazz := classFrom(t, "../testdata/com/github/jvmakine/test/Hello.class")
 		var result []string
 		for _, s := range clazz.Constants().ClassInfos() {
 			result = append(result, s.Name().Text())
