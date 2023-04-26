@@ -30,7 +30,7 @@ func (f *Field) SetDescriptor(to *String) {
 }
 
 func (c *Field) Attributes() *Attributes {
-	return &Attributes{c.file, c.memberInfo.Attributes}
+	return &Attributes{c.file, &c.memberInfo.Attributes}
 }
 
 type Fields struct {

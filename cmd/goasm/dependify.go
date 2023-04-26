@@ -29,6 +29,7 @@ func (cmd *DependifyCmd) Run() error {
 	if err != nil {
 		return err
 	}
+	file.Close()
 	clazz := class.NewClass(classFile)
 
 	references := clazz.Constants().ClassInfos()
@@ -46,6 +47,24 @@ func (cmd *DependifyCmd) Run() error {
 			hashes[name] = hash
 			println(name + " : " + hash)
 		}
+	}
+
+	builder := strings.Builder{}
+	for name, hash := range hashes {
+		builder.WriteString(name)
+		builder.WriteString(":")
+		builder.WriteString(hash)
+		builder.WriteString("\n")
+	}
+	clazz.Attributes().New(clazz.Constants().NewString("dep_hashes"), []byte(builder.String()))
+
+	file, err = os.OpenFile(cmd.ClassFile, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+	if err := classfile.Write(classFile, file); err != nil {
+		return err
 	}
 
 	return nil

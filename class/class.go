@@ -51,7 +51,7 @@ func (c *Class) Methods() *Methods {
 }
 
 func (c *Class) Attributes() *Attributes {
-	return &Attributes{c.file, c.file.Attributes}
+	return &Attributes{c.file, &c.file.Attributes}
 }
 
 func validateFilesEqual(f1, f2 *classfile.Classfile) {

@@ -30,7 +30,7 @@ func (f *Method) SetDescriptor(to *String) {
 }
 
 func (f *Method) Attributes() *Attributes {
-	return &Attributes{f.file, f.memberInfo.Attributes}
+	return &Attributes{f.file, &f.memberInfo.Attributes}
 }
 
 type Methods struct {
